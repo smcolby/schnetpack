@@ -83,6 +83,7 @@ class Atomwise(nn.Module):
         stddev=None,
         atomref=None,
         outnet=None,
+        latent=1024,
     ):
         super(Atomwise, self).__init__()
 
@@ -109,13 +110,16 @@ class Atomwise(nn.Module):
         if outnet is None:
             self.out_net = nn.Sequential(
                 schnetpack.nn.base.GetItem("representation"),
-                schnetpack.nn.blocks.MLP(n_in, n_out, n_neurons, n_layers, activation),
+                schnetpack.nn.blocks.MLP(n_in, latent, n_neurons, n_layers, activation),
             )
         else:
             self.out_net = outnet
 
         # build standardization layer
         self.standardize = schnetpack.nn.base.ScaleShift(mean, stddev)
+
+        # dense
+        self.dense = nn.Linear(latent, n_out)
 
         # build aggregation layer
         if aggregation_mode == "sum":
@@ -147,6 +151,7 @@ class Atomwise(nn.Module):
             yi = yi + y0
 
         y = self.atom_pool(yi, atom_mask)
+        y = self.dense(y)
 
         # collect results
         result = {self.property: y}
