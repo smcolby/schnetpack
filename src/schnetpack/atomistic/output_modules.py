@@ -144,14 +144,14 @@ class Atomwise(nn.Module):
 
         # run prediction
         yi = self.out_net(inputs)
-        yi = self.standardize(yi)
 
-        if self.atomref is not None:
-            y0 = self.atomref(atomic_numbers)
-            yi = yi + y0
+        # if self.atomref is not None:
+        #     y0 = self.atomref(atomic_numbers)
+        #     yi = yi + y0
 
         y = self.atom_pool(yi, atom_mask)
         y = self.dense(y)
+        y = self.standardize(y)
 
         # collect results
         result = {self.property: y}
