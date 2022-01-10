@@ -45,7 +45,8 @@ def main(args):
     if args.mode == "train":
 
         # get statistics
-        atomref = dataset.get_atomref(args.property)
+        # atomref = dataset.get_atomref(args.property)
+        atomref = {args.property: None}
         mean, stddev = get_statistics(
             args=args,
             split_path=split_path,
