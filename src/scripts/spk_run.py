@@ -46,15 +46,17 @@ def main(args):
 
         # get statistics
         # atomref = dataset.get_atomref(args.property)
+        # mean, stddev = get_statistics(
+        #     args=args,
+        #     split_path=split_path,
+        #     train_loader=train_loader,
+        #     atomref=atomref,
+        #     divide_by_atoms=get_divide_by_atoms(args),
+        #     logging=logging,
+        # )
         atomref = {args.property: None}
-        mean, stddev = get_statistics(
-            args=args,
-            split_path=split_path,
-            train_loader=train_loader,
-            atomref=atomref,
-            divide_by_atoms=get_divide_by_atoms(args),
-            logging=logging,
-        )
+        mean = {args.property: None}
+        stddev = {args.property: None}
 
         # build model
         model = get_model(args, train_loader, mean, stddev, atomref, logging=logging)
